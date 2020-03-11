@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<RelativeLayout android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+        <!--    <TextView-->
+        <!--        android:layout_width="wrap_content"-->
+        <!--        android:layout_height="wrap_content"-->
+        <!--        android:layout_above="@+id/signIn"-->
+        <!--        android:layout_centerHorizontal="true"-->
+        <!--        android:layout_marginBottom="20dp"-->
+        <!--        android:text="@string/google_login"-->
+        <!--        android:textColor="#000000"-->
+        <!--        android:textStyle="bold" />-->
+
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/signIn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true">
+
+        </com.google.android.gms.common.SignInButton>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/signIn"
+            android:layout_marginTop="10dp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/signIn"
+                android:text="@string/manual_sign_up" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/signIn"
+                android:text="@string/manual_login" />
+        </LinearLayout>
+
+    </RelativeLayout>

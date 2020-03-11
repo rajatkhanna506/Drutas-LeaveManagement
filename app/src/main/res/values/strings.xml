@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Drutas</string>
+    <string name="google_login">Click on the Button to login with your google account</string>
+    <string name="manual_login">Login</string>
+    <string name="manual_sign_up">Sign up</string>
+    <string name="spinner_title">Select Category</string>
+</resources>
