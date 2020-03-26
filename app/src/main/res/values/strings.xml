@@ -1,7 +1,17 @@
 <resources>
-    <string name="app_name">Drutas</string>
+    <string name="app_name">DRUTAS</string>
     <string name="google_login">Click on the Button to login with your google account</string>
     <string name="manual_login">Login</string>
     <string name="manual_sign_up">Sign up</string>
     <string name="spinner_title">Select Category</string>
+
+
+    <string-array name="list">
+        <item>Sick Leave</item>
+        <item>Casual Leave</item>
+        <item>Trainee Leave</item>
+        <item>Maternity Leave</item>
+        <item>Medical Leave</item>
+        <item>Earned Leave</item>
+    </string-array>
 </resources>

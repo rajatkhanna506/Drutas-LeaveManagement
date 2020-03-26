@@ -3,7 +3,6 @@
 
 <RelativeLayout android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
         <!--    <TextView-->
@@ -24,6 +23,7 @@
 
         </com.google.android.gms.common.SignInButton>
 
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -43,6 +43,10 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/signIn"
                 android:text="@string/manual_login" />
+
+
         </LinearLayout>
 
     </RelativeLayout>
+
+

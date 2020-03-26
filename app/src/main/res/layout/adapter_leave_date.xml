@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/viewsbackground"
+    android:padding="10dp"
+    android:weightSum="100">
+
+    <TextView
+        android:id="@+id/tvLeaveDate"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="30" />
+
+    <TextView
+        android:id="@+id/leaveStartTiming"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_weight="30"
+        android:text="10:00 AM"/>
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_weight="10"
+        android:text="to"/>
+
+
+    <TextView
+        android:id="@+id/leaveEndTiming"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_weight="30"
+        android:text="6:00 PM" />
+
+
+</LinearLayout>

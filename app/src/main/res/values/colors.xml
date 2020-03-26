@@ -15,4 +15,5 @@
     <color name="dialog_status">#fb744a</color>
     <color name="dialog_cancel_btn">#009689</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="dull_black">#1D1C16</color>
 </resources>
