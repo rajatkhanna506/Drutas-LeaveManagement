@@ -17,6 +17,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -30,6 +31,7 @@ import com.example.drutas.R;
 import com.example.drutas.Views.Adapter.TemporaryLeaveAdapter;
 import com.example.drutas.Views.Adapter.SavedLeaveAdapter;
 import com.example.drutas.Views.Models.NotifyModelData;
+import com.example.drutas.Views.Models.Timermodel;
 import com.example.drutas.Views.components.NonScrollListView;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -81,6 +83,7 @@ public class DashBoard extends AppCompatActivity implements GoogleApiClient.OnCo
     RadioButton rbRequestType;
     TextView tvLeaveType;
     LinearLayout llAppliedLeave;
+    FrameLayout flSpinnerLayout;
     public String LoginStatus = "loginStatus";
     String LeaveType;
     NotifyModelData notifyModelData;
@@ -89,6 +92,7 @@ public class DashBoard extends AppCompatActivity implements GoogleApiClient.OnCo
     NonScrollListView lvSavedNonScrollList;
     SavedLeaveAdapter savedLeaveAdapter;
     ArrayList<NotifyModelData> notifyModelArrayList;
+    Timermodel timermodel;
     int id;
     Date startDate = null;
     Date endDate = null;
@@ -105,6 +109,7 @@ public class DashBoard extends AppCompatActivity implements GoogleApiClient.OnCo
         setContentView(R.layout.activity_dashboard);
         drawerLayout = findViewById(R.id.drawerLayout);
         navigationView = findViewById(R.id.navView);
+        flSpinnerLayout = findViewById(R.id.layout_spinner);
         ivDrawer = findViewById(R.id.ivDrawer);
         lvSavedNonScrollList = findViewById(R.id.lvSavedLeaveList);
         rlStartDatePicker = findViewById(R.id.rlStartDateSelector);
@@ -207,12 +212,14 @@ public class DashBoard extends AppCompatActivity implements GoogleApiClient.OnCo
                     tvLeaveType.setVisibility(View.VISIBLE);
                     etReason.setHint("Reason for Leave...");
                     spinner.setVisibility(View.VISIBLE);
+                    flSpinnerLayout.setVisibility(View.VISIBLE);
                     LeaveType = spinner.getSelectedItem().toString();
 
                 } else if (rbRequestType.getText().toString().equalsIgnoreCase("Work From Home")) {
                     Log.d("TAG", "in");
                     tvLeaveType.setVisibility(View.GONE);
                     spinner.setVisibility(View.GONE);
+                    flSpinnerLayout.setVisibility(View.GONE);
                     etReason.setHint("Reason for WFH");
                     LeaveType = "WFH";
 
@@ -225,15 +232,15 @@ public class DashBoard extends AppCompatActivity implements GoogleApiClient.OnCo
             @Override
             public void onClick(View v) {
                 gson = new Gson();
-                if (SavedList == null) {
-                    SavedList = new ArrayList<>();
-                }
-                if (sharedPreferences.contains("savedList")) {
-                    String list = sharedPreferences.getString("savedList", "");
-                    Type type = new TypeToken<ArrayList<String>>() {
-                    }.getType();
-                    SavedList = gson.fromJson(list, type);
-                }
+//                if (SavedList == null) {
+//                    SavedList = new ArrayList<>();
+//                }
+//                if (sharedPreferences.contains("savedList")) {
+//                    String list = sharedPreferences.getString("savedList", "");
+//                    Type type = new TypeToken<ArrayList<String>>() {
+//                    }.getType();
+//                    SavedList = gson.fromJson(list, type);
+//                }
 
 
                 if (StartDate.isEmpty() || EndDate.isEmpty()) {
@@ -243,21 +250,23 @@ public class DashBoard extends AppCompatActivity implements GoogleApiClient.OnCo
                     Log.d("TAG", "please fill the reason");
                     Toast.makeText(DashBoard.this, "please fill the reason", Toast.LENGTH_LONG).show();
                     saved = false;
-                } else if (!SavedList.isEmpty()) {
-                    for (int i = 0; i < SavedList.size(); i++) {
-                        if (SavedList.get(i).equalsIgnoreCase(StartDate) || SavedList.get(i).equalsIgnoreCase(EndDate)) {
-                            Log.d("TAG", "already there");
-                            etReason.setText("");
-                            saved = true;
-                            SavedList.clear();
-                            break;
-                        }
-                    }
-                    if (saved == false) {
-                        saveLeave();
-                    }
-
-                } else {
+                }
+//                else if (!SavedList.isEmpty()) {
+//                    for (int i = 0; i < SavedList.size(); i++) {
+//                        if (SavedList.get(i).equalsIgnoreCase(StartDate) || SavedList.get(i).equalsIgnoreCase(EndDate)) {
+//                            Log.d("TAG", "already there");
+//                            etReason.setText("");
+//                            saved = true;
+//                            SavedList.clear();
+//                            break;
+//                        }
+//                    }
+//                    if (saved == false) {
+//                        saveLeave();
+//                    }
+//
+//                }
+                else {
 
 
 //                    for (Map.Entry<String, List<String>> entry : map.entrySet()) {
@@ -311,12 +320,12 @@ public class DashBoard extends AppCompatActivity implements GoogleApiClient.OnCo
         }
 
 
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        String json = gson.toJson(temporaryList);
-        editor.putString("savedList", json);
-        editor.commit();
+//        SharedPreferences.Editor editor = sharedPreferences.edit();
+//        String json = gson.toJson(temporaryList);
+//        editor.putString("savedList", json);
+//        editor.commit();
 
-        // map.put("leave" + count, temporaryList);
+//         map.put("leave" + count, temporaryList);
         temporaryList.clear();
         temporaryLeaveAdapter.notifyDataSetChanged();
         tvStartDate.setText("");
@@ -412,6 +421,7 @@ public class DashBoard extends AppCompatActivity implements GoogleApiClient.OnCo
 
         return EndDate;
     }
+// temp list method
 
     public void setLeaveList() {
         if (!temporaryList.isEmpty()) {
@@ -447,8 +457,12 @@ public class DashBoard extends AppCompatActivity implements GoogleApiClient.OnCo
                 curTime += interval;
             }
             if (temporaryLeaveAdapter == null) {
+//                timermodel = new Timermodel();
+//                timermodel.setStartTime("10:00 AM");
+//                timermodel.setEndTime("6:00 PM");
                 temporaryLeaveAdapter = new TemporaryLeaveAdapter(DashBoard.this, temporaryList);
                 lvTemporaryNonScrollList.setAdapter(temporaryLeaveAdapter);
+
             } else {
 
                 temporaryLeaveAdapter.notifyDataSetChanged();

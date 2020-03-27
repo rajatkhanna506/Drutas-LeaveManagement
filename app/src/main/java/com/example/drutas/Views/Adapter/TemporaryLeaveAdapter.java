@@ -9,7 +9,11 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
+
 import com.example.drutas.R;
+import com.example.drutas.Views.Models.Timermodel;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -20,10 +24,18 @@ public class TemporaryLeaveAdapter extends BaseAdapter {
     TextView tvLeaveStartTime;
     TextView tvLeaveEndTime;
     String leaveDate;
+    int sizeOfList;
+    Timermodel timermodel;
+    String StartTime;
+    String EndTime;
 
     public TemporaryLeaveAdapter(Context context, ArrayList<String> myLeaveList) {
         this.temporaryList = myLeaveList;
         this.context = context;
+        sizeOfList = temporaryList.size();
+        timermodel = new Timermodel();
+        StartTime = timermodel.getStartTime();
+        EndTime = timermodel.getEndTime();
     }
 
     @Override
@@ -42,7 +54,7 @@ public class TemporaryLeaveAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         convertView = layoutInflater.inflate(R.layout.adapter_leave_date, null);
         tvLeaveDate = convertView.findViewById(R.id.tvLeaveDate);
@@ -50,9 +62,17 @@ public class TemporaryLeaveAdapter extends BaseAdapter {
         tvLeaveEndTime = convertView.findViewById(R.id.leaveEndTiming);
         leaveDate = temporaryList.get(position);
         tvLeaveDate.setText(leaveDate);
+//        tvLeaveStartTime.setText(StartTime);
+//        tvLeaveEndTime.setText(EndTime);
+
+//        for (int i = 0; i < sizeOfList; i++) {
+//            if (i == position) {
+
+
         tvLeaveStartTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Toast.makeText(context, "pos" + position, Toast.LENGTH_SHORT).show();
                 Calendar mcurrentTime = Calendar.getInstance();
                 int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
                 int minute = mcurrentTime.get(Calendar.MINUTE);
@@ -60,11 +80,12 @@ public class TemporaryLeaveAdapter extends BaseAdapter {
                 mTimePicker = new TimePickerDialog(context, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                        tvLeaveStartTime.setText( selectedHour + ":" + selectedMinute);
+                        tvLeaveStartTime.setText(selectedHour + ":" + selectedMinute);
                     }
                 }, hour, minute, true);//Yes 24 hour time
                 mTimePicker.setTitle("Select Time");
                 mTimePicker.show();
+
             }
         });
 
@@ -78,15 +99,16 @@ public class TemporaryLeaveAdapter extends BaseAdapter {
                 mTimePicker = new TimePickerDialog(context, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                        tvLeaveEndTime.setText( selectedHour + ":" + selectedMinute);
+                        tvLeaveEndTime.setText(selectedHour + ":" + selectedMinute);
                     }
                 }, hour, minute, true);//Yes 24 hour time
                 mTimePicker.setTitle("Select Time");
                 mTimePicker.show();
             }
         });
-
-
+//            }
+//
+//        }
         return convertView;
     }
 }
