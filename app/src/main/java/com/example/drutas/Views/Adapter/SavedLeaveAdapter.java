@@ -1,7 +1,6 @@
 package com.example.drutas.Views.Adapter;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +9,7 @@ import android.widget.TextView;
 
 import com.example.drutas.R;
 import com.example.drutas.Views.Models.NotifyModelData;
+import com.example.drutas.Views.Models.SaveModel;
 import com.example.drutas.Views.components.NonScrollListView;
 
 import java.util.ArrayList;
@@ -63,16 +63,8 @@ public class SavedLeaveAdapter extends BaseAdapter {
         tvReason.setText(notifyModelData.getReason());
         Start = notifyModelData.getStartDate();
         End = notifyModelData.getEndDate();
-      //  if (leaveAdapter == null) {
-            leaveAdapter = new NonScrollAdapter(context, notifyModelData.getTimermodel());
-            lvSavedList.setAdapter(leaveAdapter);
-//        }
-//        else
-//        {
-//            leaveAdapter.notifyDataSetChanged();
-//        }
-
-
+        leaveAdapter = new NonScrollAdapter(context, notifyModelData.getSaveModel());
+        lvSavedList.setAdapter(leaveAdapter);
         return convertView;
     }
 

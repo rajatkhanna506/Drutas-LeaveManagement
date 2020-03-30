@@ -31,7 +31,8 @@ import com.example.drutas.R;
 import com.example.drutas.Views.Adapter.TemporaryLeaveAdapter;
 import com.example.drutas.Views.Adapter.SavedLeaveAdapter;
 import com.example.drutas.Views.Models.NotifyModelData;
-import com.example.drutas.Views.Models.Timermodel;
+import com.example.drutas.Views.Models.SaveModel;
+import com.example.drutas.Views.Models.TemporaryModel;
 import com.example.drutas.Views.components.NonScrollListView;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -44,9 +45,7 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.material.navigation.NavigationView;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
-import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -75,7 +74,7 @@ public class DashBoard extends AppCompatActivity implements GoogleApiClient.OnCo
     String Start = "";
     String End = "";
     int mYear, mMonth, mDay;
-    ArrayList<Timermodel> temporaryList;
+    ArrayList<TemporaryModel> temporaryList;
     ImageView addleave;
     EditText etReason;
     SharedPreferences sharedPreferences;
@@ -92,15 +91,15 @@ public class DashBoard extends AppCompatActivity implements GoogleApiClient.OnCo
     NonScrollListView lvSavedNonScrollList;
     SavedLeaveAdapter savedLeaveAdapter;
     ArrayList<NotifyModelData> notifyModelArrayList;
-    Timermodel timermodel;
+    TemporaryModel temporaryModel;
     int id;
     Date startDate = null;
     Date endDate = null;
     Gson gson;
-    Map<String, List<String>> map;
-    ArrayList<Timermodel> savedList;
+    Map<String, List<NotifyModelData>> map;
+    ArrayList<SaveModel> savedList;
     ArrayList<String> myleaveList;
-    Boolean saved = false;
+
 
 
     @Override
@@ -129,7 +128,7 @@ public class DashBoard extends AppCompatActivity implements GoogleApiClient.OnCo
         myleaveList = new ArrayList<>();
 
 
-        map = new HashMap<String, List<String>>();
+        map = new HashMap<String, List<NotifyModelData>>();
         ArrayAdapter adapter = ArrayAdapter.createFromResource(this, R.array.list, R.layout.color_spinner_layout);
         adapter.setDropDownViewResource(R.layout.spinner_dropdown_layout);
         spinner.setAdapter(adapter);
@@ -240,36 +239,48 @@ public class DashBoard extends AppCompatActivity implements GoogleApiClient.OnCo
                 } else if (etReason.getText().toString().isEmpty()) {
                     Log.d("TAG", "please fill the reason");
                     Toast.makeText(DashBoard.this, "please fill the reason", Toast.LENGTH_LONG).show();
-                    //saved = false;
                 } else {
 
                     saveLeave();
                 }
-                // saved = false;
+
 
             }
         });
     }
 
     public void saveLeave() {
-
         if (notifyModelArrayList == null) {
             notifyModelArrayList = new ArrayList<>();
-            notifyModelData = new NotifyModelData();
         }
 
-            Toast.makeText(DashBoard.this, "display list", Toast.LENGTH_LONG).show();
-            notifyModelData.setLeaveType(LeaveType);
-            notifyModelData.setNotifyDate(Start + " To " + End);
-            notifyModelData.setReason(etReason.getText().toString());
-            notifyModelData.setStartDate(Start);
-            notifyModelData.setEndDate(End);
-            notifyModelData.setTimermodel(savedList);
-            notifyModelArrayList.add(notifyModelData);
+
+        savedList = new ArrayList<>();
+        notifyModelData = new NotifyModelData();
+        Toast.makeText(DashBoard.this, "display list", Toast.LENGTH_LONG).show();
+        notifyModelData.setLeaveType(LeaveType);
+        notifyModelData.setNotifyDate(Start + " To " + End);
+        notifyModelData.setReason(etReason.getText().toString());
+        notifyModelData.setStartDate(Start);
+        notifyModelData.setEndDate(End);
+        for (int i = 0; i < temporaryList.size(); i++) {
+            SaveModel saveModel = new SaveModel();
+            TemporaryModel temporaryModel = temporaryList.get(i);
+            Log.d("TAG", "msg" + temporaryModel.getLeaveDate());
+            saveModel.setLeaveDate(temporaryModel.getLeaveDate());
+            saveModel.setStartTime(temporaryModel.getStartTime());
+            saveModel.setEndTime(temporaryModel.getEndTime());
+            savedList.add(saveModel);
+        }
+        notifyModelData.setSaveModel(savedList);
+        notifyModelArrayList.add(notifyModelData);
+
+        if (savedLeaveAdapter == null) {
             savedLeaveAdapter = new SavedLeaveAdapter(getApplicationContext(), notifyModelArrayList);
             lvSavedNonScrollList.setAdapter(savedLeaveAdapter);
-
-
+        } else {
+            savedLeaveAdapter.notifyDataSetChanged();
+        }
 
         temporaryList.clear();
         temporaryLeaveAdapter.notifyDataSetChanged();
@@ -278,7 +289,6 @@ public class DashBoard extends AppCompatActivity implements GoogleApiClient.OnCo
         etReason.setText("");
         Start = "";
         End = "";
-
 
 
     }
@@ -398,13 +408,13 @@ public class DashBoard extends AppCompatActivity implements GoogleApiClient.OnCo
             long endTime = endDate.getTime(); // create your endtime here, possibly using Calendar or Date
             long curTime = startDate.getTime();
             while (curTime <= endTime) {
-                timermodel = new Timermodel();
+                temporaryModel = new TemporaryModel();
                 Date sdate = new Date(curTime);
-                timermodel.setLeaveDate(formatter.format(sdate));
-                timermodel.setStartTime("10:00 AM");
-                timermodel.setEndTime("06:00 PM");
-                temporaryList.add(timermodel);
-                savedList.add(timermodel);
+                temporaryModel.setLeaveDate(formatter.format(sdate));
+                temporaryModel.setStartTime("10:00 AM");
+                temporaryModel.setEndTime("06:00 PM");
+                temporaryList.add(temporaryModel);
+
 
                 curTime += interval;
             }
@@ -416,6 +426,7 @@ public class DashBoard extends AppCompatActivity implements GoogleApiClient.OnCo
 
                 temporaryLeaveAdapter.notifyDataSetChanged();
             }
+
 
         } else {
 

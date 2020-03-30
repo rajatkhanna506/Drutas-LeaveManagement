@@ -126,20 +126,20 @@
                     android:id="@+id/layout_spinner"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_below="@+id/tvLeaveType"
                     android:layout_margin="10dp"
-                    android:background="@drawable/roundedcornersbackground"
-                    android:layout_below="@+id/tvLeaveType">
+                    android:background="@drawable/roundedcornersbackground">
 
                     <Spinner
                         android:id="@+id/spinner"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
                         android:layout_centerHorizontal="true"
+                        android:layout_margin="10dp"
                         android:layout_marginTop="5dp"
+                        android:entries="@array/list"
                         android:popupBackground="@color/dialog_description"
                         android:spinnerMode="dropdown"
-                        android:entries="@array/list"
                         android:textColor="#ffffff" />
 
                     <ImageView
@@ -149,8 +149,7 @@
                         android:layout_gravity="right|center_vertical|center_horizontal|center"
                         android:layout_marginRight="10dp"
                         android:src="@drawable/dropdown"
-                        android:tint="@color/whiteColor"
-                         />
+                        android:tint="@color/whiteColor" />
                 </FrameLayout>
 
 

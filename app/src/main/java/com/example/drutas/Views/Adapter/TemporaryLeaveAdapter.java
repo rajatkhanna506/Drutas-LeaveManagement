@@ -2,7 +2,6 @@ package com.example.drutas.Views.Adapter;
 
 import android.app.TimePickerDialog;
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +11,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.drutas.R;
-import com.example.drutas.Views.Models.Timermodel;
+import com.example.drutas.Views.Models.TemporaryModel;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -21,18 +20,18 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class TemporaryLeaveAdapter extends BaseAdapter {
-    ArrayList<Timermodel> temporaryList;
+    ArrayList<TemporaryModel> temporaryList;
     Context context;
     TextView tvLeaveDate;
     TextView tvLeaveStartTime;
     TextView tvLeaveEndTime;
     String leaveDate;
-    Timermodel timermodel;
+    TemporaryModel timermodel;
     String StartTime;
     String EndTime;
     int size;
 
-    public TemporaryLeaveAdapter(Context context, ArrayList<Timermodel> myLeaveList) {
+    public TemporaryLeaveAdapter(Context context, ArrayList<TemporaryModel> myLeaveList) {
         this.temporaryList = myLeaveList;
         this.context = context;
         this.size = myLeaveList.size();
@@ -58,11 +57,11 @@ public class TemporaryLeaveAdapter extends BaseAdapter {
     public View getView(final int position, View convertView, ViewGroup parent) {
 
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        convertView = layoutInflater.inflate(R.layout.adapter_leave_date, null);
+        convertView = layoutInflater.inflate(R.layout.adapter_temporary_leave_, null);
         tvLeaveDate = convertView.findViewById(R.id.tvLeaveDate);
         tvLeaveStartTime = convertView.findViewById(R.id.leaveStartTiming);
         tvLeaveEndTime = convertView.findViewById(R.id.leaveEndTiming);
-        timermodel = new Timermodel();
+        timermodel = new TemporaryModel();
         timermodel = temporaryList.get(position);
         tvLeaveDate.setText(timermodel.getLeaveDate());
         tvLeaveStartTime.setText(timermodel.getStartTime());

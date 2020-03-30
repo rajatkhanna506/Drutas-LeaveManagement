@@ -7,36 +7,34 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.drutas.R;
-import com.example.drutas.Views.Models.Timermodel;
+import com.example.drutas.Views.Models.SaveModel;
 
 import java.util.ArrayList;
 
 public class NonScrollAdapter extends BaseAdapter {
-    ArrayList<Timermodel> myLeaveList;
+    ArrayList<SaveModel> SaveLeaveList;
     Context context;
     TextView tvLeaveDate;
     TextView tvStartTime;
     TextView tvEndTime;
-    String leaveDate;
-    Timermodel timermodel;
+    SaveModel saveModel;
 
 
-    public NonScrollAdapter(Context context, ArrayList<Timermodel> myLeaveList) {
-        this.myLeaveList = myLeaveList;
+    public NonScrollAdapter(Context context, ArrayList<SaveModel> myLeaveList) {
+        this.SaveLeaveList = myLeaveList;
         this.context = context;
     }
 
     @Override
     public int getCount() {
-        return myLeaveList.size();
+        return SaveLeaveList.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return myLeaveList.get(position);
+        return SaveLeaveList.get(position);
     }
 
     @Override
@@ -47,18 +45,16 @@ public class NonScrollAdapter extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        convertView = layoutInflater.inflate(R.layout.timers, null);
+        convertView = layoutInflater.inflate(R.layout.adapter_save_leave, null);
         tvLeaveDate = convertView.findViewById(R.id.savedLeaveDate);
         tvStartTime = convertView.findViewById(R.id.savedleaveStartTiming);
         tvEndTime = convertView.findViewById(R.id.savedleaveEndTiming);
-        if (timermodel == null) {
-            timermodel = new Timermodel();
-        }
-        timermodel = myLeaveList.get(position);
-        tvLeaveDate.setText(timermodel.getLeaveDate());
-        Log.e("TAG", "leaved" + timermodel.getLeaveDate());
-        tvStartTime.setText(timermodel.getStartTime());
-        tvEndTime.setText(timermodel.getEndTime());
+        saveModel = new SaveModel();
+        saveModel = SaveLeaveList.get(position);
+        tvLeaveDate.setText(saveModel.getLeaveDate());
+        Log.e("TAG", "leaved" + saveModel.getLeaveDate());
+        tvStartTime.setText(saveModel.getStartTime());
+        tvEndTime.setText(saveModel.getEndTime());
         return convertView;
     }
 }
