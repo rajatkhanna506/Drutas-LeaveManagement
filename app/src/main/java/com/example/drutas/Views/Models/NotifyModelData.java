@@ -8,6 +8,7 @@ public class NotifyModelData {
     private String Reason;
     private String StartDate;
     private String EndDate;
+    private ArrayList<Timermodel> timermodel;
 
     public String getStartDate() {
         return StartDate;
@@ -49,7 +50,13 @@ public class NotifyModelData {
         Reason = reason;
     }
 
+    public ArrayList<Timermodel> getTimermodel() {
+        return timermodel;
+    }
 
+    public void setTimermodel(ArrayList<Timermodel> timermodel) {
+        this.timermodel = timermodel;
+    }
 
 
 }

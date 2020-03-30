@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_weight="30"
-        android:text="10:00 AM"/>
+        />
 
     <TextView
         android:layout_width="0dp"
@@ -34,7 +34,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_weight="30"
-        android:text="6:00 PM" />
+        />
 
 
 </LinearLayout>

@@ -20,6 +20,7 @@
         android:text="From"
         android:textColor="@color/whiteColor" />
 
+
     <com.example.drutas.Views.components.NonScrollListView
         android:id="@+id/lvNonScroll"
         android:layout_width="match_parent"
@@ -37,14 +38,14 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="end">
+        android:gravity="end"
+        android:orientation="horizontal">
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/edit"
             android:layout_marginRight="30dp"
+            android:background="@drawable/edit"
             android:padding="15dp">
 
         </ImageView>
@@ -53,7 +54,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/delete"
-            android:padding="15dp"/>
+            android:padding="15dp" />
     </LinearLayout>
 
 </LinearLayout>

@@ -72,10 +72,10 @@ public class DashBoard extends AppCompatActivity implements GoogleApiClient.OnCo
     TextView tvStartDate;
     TextView tvEndDate;
     Spinner spinner;
-    String StartDate = "";
-    String EndDate = "";
+    String Start = "";
+    String End = "";
     int mYear, mMonth, mDay;
-    ArrayList<String> temporaryList;
+    ArrayList<Timermodel> temporaryList;
     ImageView addleave;
     EditText etReason;
     SharedPreferences sharedPreferences;
@@ -97,10 +97,10 @@ public class DashBoard extends AppCompatActivity implements GoogleApiClient.OnCo
     Date startDate = null;
     Date endDate = null;
     Gson gson;
-    ArrayList<String> SavedList;
-    Boolean saved = false;
     Map<String, List<String>> map;
-    int count = 1;
+    ArrayList<Timermodel> savedList;
+    ArrayList<String> myleaveList;
+    Boolean saved = false;
 
 
     @Override
@@ -126,7 +126,9 @@ public class DashBoard extends AppCompatActivity implements GoogleApiClient.OnCo
         llAppliedLeave = findViewById(R.id.llAplliedLeave);
         sharedPreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
         temporaryList = new ArrayList<>();
-        notifyModelArrayList = new ArrayList<>();
+        myleaveList = new ArrayList<>();
+
+
         map = new HashMap<String, List<String>>();
         ArrayAdapter adapter = ArrayAdapter.createFromResource(this, R.array.list, R.layout.color_spinner_layout);
         adapter.setDropDownViewResource(R.layout.spinner_dropdown_layout);
@@ -190,7 +192,7 @@ public class DashBoard extends AppCompatActivity implements GoogleApiClient.OnCo
         rlEndDatePicker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!StartDate.isEmpty()) {
+                if (!Start.isEmpty()) {
                     openEndCalendar(v);
 
 
@@ -232,69 +234,18 @@ public class DashBoard extends AppCompatActivity implements GoogleApiClient.OnCo
             @Override
             public void onClick(View v) {
                 gson = new Gson();
-//                if (SavedList == null) {
-//                    SavedList = new ArrayList<>();
-//                }
-//                if (sharedPreferences.contains("savedList")) {
-//                    String list = sharedPreferences.getString("savedList", "");
-//                    Type type = new TypeToken<ArrayList<String>>() {
-//                    }.getType();
-//                    SavedList = gson.fromJson(list, type);
-//                }
-
-
-                if (StartDate.isEmpty() || EndDate.isEmpty()) {
+                if (Start.isEmpty() || End.isEmpty()) {
                     Log.d("TAG", "Please select the dates");
                     Toast.makeText(DashBoard.this, "Please select the dates", Toast.LENGTH_LONG).show();
                 } else if (etReason.getText().toString().isEmpty()) {
                     Log.d("TAG", "please fill the reason");
                     Toast.makeText(DashBoard.this, "please fill the reason", Toast.LENGTH_LONG).show();
-                    saved = false;
-                }
-//                else if (!SavedList.isEmpty()) {
-//                    for (int i = 0; i < SavedList.size(); i++) {
-//                        if (SavedList.get(i).equalsIgnoreCase(StartDate) || SavedList.get(i).equalsIgnoreCase(EndDate)) {
-//                            Log.d("TAG", "already there");
-//                            etReason.setText("");
-//                            saved = true;
-//                            SavedList.clear();
-//                            break;
-//                        }
-//                    }
-//                    if (saved == false) {
-//                        saveLeave();
-//                    }
-//
-//                }
-                else {
+                    //saved = false;
+                } else {
 
-
-//                    for (Map.Entry<String, List<String>> entry : map.entrySet()) {
-//                        //String key = entry.getKey();
-//                        List<String> values = entry.getValue();
-////                    System.out.println("Key = " + key);
-////                    System.out.println("Values = " + values + "n");
-//                        SavedList = (ArrayList<String>) values;
-//                        if (!SavedList.isEmpty()) {
-//                            for (int i = 0; i < SavedList.size(); i++) {
-//                                if (SavedList.get(i).equalsIgnoreCase(StartDate) || SavedList.get(i).equalsIgnoreCase(EndDate)) {
-//                                    Log.d("TAG", "already there");
-//                                    etReason.setText("");
-//                                    saved = true;
-//                                    SavedList.clear();
-//                                    break;
-//                                }
-//                            }
-//                            if (saved == false) {
-//                                saveLeave();
-//                                break;
-//                            }
-//
-//                        }
-//                    }
                     saveLeave();
                 }
-                saved = false;
+                // saved = false;
 
             }
         });
@@ -302,39 +253,33 @@ public class DashBoard extends AppCompatActivity implements GoogleApiClient.OnCo
 
     public void saveLeave() {
 
-        Toast.makeText(DashBoard.this, "display list", Toast.LENGTH_LONG).show();
-        notifyModelData = new NotifyModelData();
-        notifyModelData.setLeaveType(LeaveType);
-        notifyModelData.setNotifyDate(StartDate + " To " + EndDate);
-        notifyModelData.setReason(etReason.getText().toString());
-        notifyModelData.setStartDate(StartDate);
-        notifyModelData.setEndDate(EndDate);
-        notifyModelArrayList.add(notifyModelData);
-        if (savedLeaveAdapter == null) {
-            savedLeaveAdapter = new SavedLeaveAdapter(getApplicationContext(), notifyModelArrayList);
-            //savedLeaveAdapter.acceptArrayList(temporaryList);
-            lvSavedNonScrollList.setAdapter(savedLeaveAdapter);
-        } else {
-            //savedLeaveAdapter.acceptArrayList(temporaryList);
-            savedLeaveAdapter.notifyDataSetChanged();
+        if (notifyModelArrayList == null) {
+            notifyModelArrayList = new ArrayList<>();
+            notifyModelData = new NotifyModelData();
         }
 
+            Toast.makeText(DashBoard.this, "display list", Toast.LENGTH_LONG).show();
+            notifyModelData.setLeaveType(LeaveType);
+            notifyModelData.setNotifyDate(Start + " To " + End);
+            notifyModelData.setReason(etReason.getText().toString());
+            notifyModelData.setStartDate(Start);
+            notifyModelData.setEndDate(End);
+            notifyModelData.setTimermodel(savedList);
+            notifyModelArrayList.add(notifyModelData);
+            savedLeaveAdapter = new SavedLeaveAdapter(getApplicationContext(), notifyModelArrayList);
+            lvSavedNonScrollList.setAdapter(savedLeaveAdapter);
 
-//        SharedPreferences.Editor editor = sharedPreferences.edit();
-//        String json = gson.toJson(temporaryList);
-//        editor.putString("savedList", json);
-//        editor.commit();
 
-//         map.put("leave" + count, temporaryList);
+
         temporaryList.clear();
         temporaryLeaveAdapter.notifyDataSetChanged();
         tvStartDate.setText("");
         tvEndDate.setText("");
         etReason.setText("");
-        StartDate = "";
-        EndDate = "";
-        saved = false;
-        count++;
+        Start = "";
+        End = "";
+
+
 
     }
 
@@ -357,17 +302,17 @@ public class DashBoard extends AppCompatActivity implements GoogleApiClient.OnCo
                         Calendar calendar = Calendar.getInstance();
                         calendar.set(year, monthOfYear, dayOfMonth);
                         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-                        StartDate = sdf.format(calendar.getTime());
+                        Start = sdf.format(calendar.getTime());
 
                         try {
-                            calendar.setTime(sdf.parse(StartDate));
-                            StartDate = sdf.format(calendar.getTime());
-                            tvStartDate.setText(StartDate);
-                            if (!EndDate.isEmpty()) {
+                            calendar.setTime(sdf.parse(Start));
+                            Start = sdf.format(calendar.getTime());
+                            tvStartDate.setText(Start);
+                            if (!End.isEmpty()) {
                                 setLeaveList();
                             }
 
-                            Log.d("TAG", "manual" + StartDate);
+                            Log.d("TAG", "manual" + Start);
 
                         } catch (ParseException e) {
                             e.printStackTrace();
@@ -379,7 +324,7 @@ public class DashBoard extends AppCompatActivity implements GoogleApiClient.OnCo
         datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis());
         datePickerDialog.show();
 
-        return StartDate;
+        return Start;
     }
 
     public String openEndCalendar(View v) {
@@ -400,14 +345,14 @@ public class DashBoard extends AppCompatActivity implements GoogleApiClient.OnCo
                         Calendar calendar = Calendar.getInstance();
                         calendar.set(year, monthOfYear, dayOfMonth);
                         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-                        EndDate = sdf.format(calendar.getTime());
+                        End = sdf.format(calendar.getTime());
 
                         try {
-                            calendar.setTime(sdf.parse(EndDate));
-                            EndDate = sdf.format(calendar.getTime());
+                            calendar.setTime(sdf.parse(End));
+                            End = sdf.format(calendar.getTime());
 
                             setLeaveList();
-                            Log.d("TAG", "manual" + EndDate);
+                            Log.d("TAG", "manual" + End);
 
                         } catch (ParseException e) {
                             e.printStackTrace();
@@ -419,27 +364,28 @@ public class DashBoard extends AppCompatActivity implements GoogleApiClient.OnCo
         datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis());
         datePickerDialog.show();
 
-        return EndDate;
+        return End;
     }
 // temp list method
 
     public void setLeaveList() {
+
         if (!temporaryList.isEmpty()) {
             temporaryList.clear();
         }
-        DateFormat formatter;
-
-        formatter = new SimpleDateFormat("dd/MM/yyyy");
-
+        if (savedList == null) {
+            savedList = new ArrayList<>();
+        }
+        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         try {
-            startDate = (Date) formatter.parse(StartDate);
+            startDate = (Date) formatter.parse(Start);
         } catch (ParseException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
         try {
-            endDate = (Date) formatter.parse(EndDate);
+            endDate = (Date) formatter.parse(End);
         } catch (ParseException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -447,19 +393,22 @@ public class DashBoard extends AppCompatActivity implements GoogleApiClient.OnCo
         if (endDate.compareTo(startDate) >= 0) {
 
 
-            tvEndDate.setText(EndDate);
+            tvEndDate.setText(End);
             long interval = 24 * 1000 * 60 * 60; // 1 hour in millis
             long endTime = endDate.getTime(); // create your endtime here, possibly using Calendar or Date
             long curTime = startDate.getTime();
             while (curTime <= endTime) {
+                timermodel = new Timermodel();
                 Date sdate = new Date(curTime);
-                temporaryList.add(formatter.format(sdate));
+                timermodel.setLeaveDate(formatter.format(sdate));
+                timermodel.setStartTime("10:00 AM");
+                timermodel.setEndTime("06:00 PM");
+                temporaryList.add(timermodel);
+                savedList.add(timermodel);
+
                 curTime += interval;
             }
             if (temporaryLeaveAdapter == null) {
-//                timermodel = new Timermodel();
-//                timermodel.setStartTime("10:00 AM");
-//                timermodel.setEndTime("6:00 PM");
                 temporaryLeaveAdapter = new TemporaryLeaveAdapter(DashBoard.this, temporaryList);
                 lvTemporaryNonScrollList.setAdapter(temporaryLeaveAdapter);
 

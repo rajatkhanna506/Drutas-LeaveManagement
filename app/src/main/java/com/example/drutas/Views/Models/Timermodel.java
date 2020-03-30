@@ -1,22 +1,31 @@
 package com.example.drutas.Views.Models;
 
 public class Timermodel {
-    public String StartTime;
-    public String EndTime;
+    public String startTime;
+    public String endTime;
+    public String leaveDate;
 
     public String getStartTime() {
-        return StartTime;
+        return startTime;
     }
 
     public void setStartTime(String startTime) {
-        StartTime = startTime;
+        this.startTime = startTime;
     }
 
     public String getEndTime() {
-        return EndTime;
+        return endTime;
     }
 
     public void setEndTime(String endTime) {
-        EndTime = endTime;
+        this.endTime = endTime;
+    }
+
+    public String getLeaveDate() {
+        return leaveDate;
+    }
+
+    public void setLeaveDate(String leaveDate) {
+        this.leaveDate = leaveDate;
     }
 }

@@ -12,11 +12,7 @@ import com.example.drutas.R;
 import com.example.drutas.Views.Models.NotifyModelData;
 import com.example.drutas.Views.components.NonScrollListView;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class SavedLeaveAdapter extends BaseAdapter {
     ArrayList<NotifyModelData> notifyModelDataArrayList;
@@ -25,21 +21,16 @@ public class SavedLeaveAdapter extends BaseAdapter {
     TextView tvNotiftDate;
     TextView tvReason;
     NonScrollListView lvSavedList;
-    ArrayList<String> myLeaveList;
+    NotifyModelData notifyModelData;
     NonScrollAdapter leaveAdapter;
     String Start;
     String End;
-    Date startDate = null;
-    Date endDate = null;
-    SharedPreferences sharedPreferences;
+
 
     public SavedLeaveAdapter(Context applicationContext, ArrayList<NotifyModelData> notifyModelArrayList) {
         this.notifyModelDataArrayList = notifyModelArrayList;
         this.context = applicationContext;
-    }
 
-    public void acceptArrayList(ArrayList<String> myLeaveList) {
-        this.myLeaveList = myLeaveList;
     }
 
 
@@ -66,20 +57,22 @@ public class SavedLeaveAdapter extends BaseAdapter {
         tvNotiftDate = convertView.findViewById(R.id.tvNotifyDate);
         tvReason = convertView.findViewById(R.id.tvReason);
         lvSavedList = convertView.findViewById(R.id.lvNonScroll);
-        NotifyModelData notifyModelData = notifyModelDataArrayList.get(position);
+        notifyModelData = notifyModelDataArrayList.get(position);
         tvLeaveHeader.setText(notifyModelData.getLeaveType());
         tvNotiftDate.setText(notifyModelData.getNotifyDate());
         tvReason.setText(notifyModelData.getReason());
-//        Start = notifyModelData.getStartDate();
-//        End = notifyModelData.getEndDate();
-
-//        if (leaveAdapter == null) {
-//            leaveAdapter = new NonScrollAdapter(context, myLeaveList);
-//            lvSavedList.setAdapter(leaveAdapter);
-//        } else {
+        Start = notifyModelData.getStartDate();
+        End = notifyModelData.getEndDate();
+      //  if (leaveAdapter == null) {
+            leaveAdapter = new NonScrollAdapter(context, notifyModelData.getTimermodel());
+            lvSavedList.setAdapter(leaveAdapter);
+//        }
+//        else
+//        {
 //            leaveAdapter.notifyDataSetChanged();
 //        }
-//
+
+
         return convertView;
     }
 
