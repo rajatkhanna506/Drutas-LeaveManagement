@@ -27,8 +27,10 @@ public class TemporaryLeaveAdapter extends BaseAdapter {
     TextView tvLeaveEndTime;
     String leaveDate;
     TemporaryModel timermodel;
-    String StartTime;
-    String EndTime;
+    Date startTime;
+    Date endTime;
+    String strt;
+    String end;
     int size;
 
     public TemporaryLeaveAdapter(Context context, ArrayList<TemporaryModel> myLeaveList) {
@@ -77,23 +79,44 @@ public class TemporaryLeaveAdapter extends BaseAdapter {
                 mTimePicker = new TimePickerDialog(context, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                        String AM_PM ;
-                        if(selectedHour < 12) {
+                        String AM_PM;
+                        if (selectedHour < 12) {
                             AM_PM = "AM";
                         } else {
                             AM_PM = "PM";
                         }
-                        String time = selectedHour+":"+selectedMinute;
+                        String time = selectedHour + ":" + selectedMinute;
                         try {
-                            final SimpleDateFormat sdf = new SimpleDateFormat("H:mm");
-                            final Date dateObj = sdf.parse(time);
-                            System.out.println(new SimpleDateFormat("K:mm").format(dateObj));
-                            temporaryList.get(position).setStartTime(new SimpleDateFormat("K:mm").format(dateObj)+" "+AM_PM);
+                            SimpleDateFormat sdf1 = new SimpleDateFormat("HH:mm");
+                            SimpleDateFormat sdf2 = new SimpleDateFormat("hh:mm");
+                            Date dateObj = sdf1.parse(time);
+                            strt = sdf1.format(dateObj);
+                            startTime = sdf1.parse(strt);
+                            if(startTime == null){
+                                startTime = sdf1.parse(timermodel.getStartTime());
+                            }
+                            if(endTime == null)
+                            {
+                                endTime = sdf1.parse(timermodel.getEndTime());
+                            }
+                            if(startTime.after(endTime))
+                            {
+                                Toast.makeText(context,"msg wrong",Toast.LENGTH_SHORT).show();
+                                startTime = null;
+                                endTime = null;
+                            }
+                            else
+                            {
+                                Toast.makeText(context,"msg right",Toast.LENGTH_SHORT).show();
+                                temporaryList.get(position).setStartTime(sdf2.format(startTime) + " " + AM_PM);
+                                notifyDataSetChanged();
+                            }
+
                         } catch (final ParseException e) {
                             e.printStackTrace();
                         }
-                        //temporaryList.get(position).setStartTime(selectedHour + ":" + selectedMinute+" "+AM_PM);
-                        notifyDataSetChanged();
+
+
                     }
                 }, hour, minute, false);//Yes 24 hour time
                 mTimePicker.setTitle("Select Time");
@@ -113,23 +136,46 @@ public class TemporaryLeaveAdapter extends BaseAdapter {
                 mTimePicker = new TimePickerDialog(context, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                        String AM_PM ;
-                        if(selectedHour < 12) {
+                        String AM_PM;
+                        if (selectedHour < 12) {
                             AM_PM = "AM";
                         } else {
                             AM_PM = "PM";
                         }
-                        String time = selectedHour+":"+selectedMinute;
+                        String time = selectedHour + ":" + selectedMinute;
                         try {
-                            final SimpleDateFormat sdf = new SimpleDateFormat("H:mm");
-                            final Date dateObj = sdf.parse(time);
-                            System.out.println(new SimpleDateFormat("K:mm").format(dateObj));
-                            temporaryList.get(position).setEndTime(new SimpleDateFormat("K:mm").format(dateObj)+" "+AM_PM);
+                            SimpleDateFormat sdf1 = new SimpleDateFormat("HH:mm");
+                            SimpleDateFormat sdf2 = new SimpleDateFormat("hh:mm");
+
+                            Date dateObj = sdf1.parse(time);
+                            end = sdf1.format(dateObj);
+                            endTime = sdf1.parse(end);
+                            if(startTime == null){
+                                startTime = sdf1.parse(timermodel.getStartTime());
+                            }
+                            if(endTime == null)
+                            {
+                                endTime = sdf1.parse(timermodel.getEndTime());
+                            }
+                            if(endTime.before(startTime))
+                            {
+                                Toast.makeText(context,"msg wrong",Toast.LENGTH_SHORT).show();
+                                endTime = null;
+                                startTime = null;
+
+                            }
+                            else
+                            {
+                                Toast.makeText(context,"msg right",Toast.LENGTH_SHORT).show();
+                                temporaryList.get(position).setEndTime(sdf2.format(endTime) + " " + AM_PM);
+                                notifyDataSetChanged();
+                            }
+
                         } catch (final ParseException e) {
                             e.printStackTrace();
                         }
-                        //temporaryList.get(position).setEndTime(selectedHour + ":" + selectedMinute+" "+AM_PM);
-                        notifyDataSetChanged();
+
+
                     }
                 }, hour, minute, false);//Yes 24 hour time
                 mTimePicker.setTitle("Select Time");
