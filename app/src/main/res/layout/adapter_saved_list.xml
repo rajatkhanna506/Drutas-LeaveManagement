@@ -46,6 +46,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="30dp"
             android:background="@drawable/edit"
+            android:id="@+id/edit"
             android:padding="15dp">
 
         </ImageView>
@@ -54,6 +55,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/delete"
+            android:id="@+id/delete"
             android:padding="15dp" />
     </LinearLayout>
 

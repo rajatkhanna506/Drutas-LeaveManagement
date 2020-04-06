@@ -11,7 +11,10 @@ import android.widget.TextView;
 import com.example.drutas.R;
 import com.example.drutas.Views.Models.SaveModel;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class NonScrollAdapter extends BaseAdapter {
     ArrayList<SaveModel> SaveLeaveList;
@@ -20,6 +23,8 @@ public class NonScrollAdapter extends BaseAdapter {
     TextView tvStartTime;
     TextView tvEndTime;
     SaveModel saveModel;
+    Date dateObj1;
+    Date dateObj2;
 
 
     public NonScrollAdapter(Context context, ArrayList<SaveModel> myLeaveList) {
@@ -53,8 +58,24 @@ public class NonScrollAdapter extends BaseAdapter {
         saveModel = SaveLeaveList.get(position);
         tvLeaveDate.setText(saveModel.getLeaveDate());
         Log.e("TAG", "leaved" + saveModel.getLeaveDate());
-        tvStartTime.setText(saveModel.getStartTime());
-        tvEndTime.setText(saveModel.getEndTime());
+        SimpleDateFormat sdf1 = new SimpleDateFormat("HH:mm");
+        SimpleDateFormat sdf2 = new SimpleDateFormat("hh:mm a");
+        try {
+
+            dateObj1 = sdf1.parse(saveModel.getStartTime());
+            tvStartTime.setText(sdf2.format(dateObj1) + " ");
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        try {
+
+            dateObj2 = sdf1.parse(saveModel.getEndTime());
+            tvEndTime.setText(sdf2.format(dateObj2) + " ");
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+
         return convertView;
     }
 }

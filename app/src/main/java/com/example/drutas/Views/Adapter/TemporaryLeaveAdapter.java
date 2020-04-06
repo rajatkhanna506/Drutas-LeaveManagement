@@ -32,6 +32,8 @@ public class TemporaryLeaveAdapter extends BaseAdapter {
     String strt;
     String end;
     int size;
+    Date dateObj1;
+    Date dateObj2;
 
     public TemporaryLeaveAdapter(Context context, ArrayList<TemporaryModel> myLeaveList) {
         this.temporaryList = myLeaveList;
@@ -66,8 +68,18 @@ public class TemporaryLeaveAdapter extends BaseAdapter {
         timermodel = new TemporaryModel();
         timermodel = temporaryList.get(position);
         tvLeaveDate.setText(timermodel.getLeaveDate());
-        tvLeaveStartTime.setText(timermodel.getStartTime());
-        tvLeaveEndTime.setText(timermodel.getEndTime());
+        final SimpleDateFormat sdf1 = new SimpleDateFormat("HH:mm");
+        final SimpleDateFormat sdf2 = new SimpleDateFormat("hh:mm a");
+
+        try {
+            dateObj1 = sdf1.parse(timermodel.getStartTime());
+            dateObj2 = sdf1.parse(timermodel.getEndTime());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        tvLeaveStartTime.setText(sdf2.format(dateObj1) + "");
+        tvLeaveEndTime.setText(sdf2.format(dateObj2) + "");
         tvLeaveStartTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -87,28 +99,24 @@ public class TemporaryLeaveAdapter extends BaseAdapter {
                         }
                         String time = selectedHour + ":" + selectedMinute;
                         try {
-                            SimpleDateFormat sdf1 = new SimpleDateFormat("HH:mm");
-                            SimpleDateFormat sdf2 = new SimpleDateFormat("hh:mm");
-                            Date dateObj = sdf1.parse(time);
-                            strt = sdf1.format(dateObj);
+
+                           // SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm");
+
+                            strt = time;
                             startTime = sdf1.parse(strt);
-                            if(startTime == null){
+                            if (startTime == null) {
                                 startTime = sdf1.parse(timermodel.getStartTime());
                             }
-                            if(endTime == null)
-                            {
+                            if (endTime == null) {
                                 endTime = sdf1.parse(timermodel.getEndTime());
                             }
-                            if(startTime.after(endTime))
-                            {
-                                Toast.makeText(context,"msg wrong",Toast.LENGTH_SHORT).show();
+                            if (startTime.after(endTime)) {
+                                Toast.makeText(context, "msg wrong", Toast.LENGTH_SHORT).show();
                                 startTime = null;
                                 endTime = null;
-                            }
-                            else
-                            {
-                                Toast.makeText(context,"msg right",Toast.LENGTH_SHORT).show();
-                                temporaryList.get(position).setStartTime(sdf2.format(startTime) + " " + AM_PM);
+                            } else {
+                                Toast.makeText(context, "msg right", Toast.LENGTH_SHORT).show();
+                                temporaryList.get(position).setStartTime(sdf1.format(startTime));
                                 notifyDataSetChanged();
                             }
 
@@ -144,30 +152,26 @@ public class TemporaryLeaveAdapter extends BaseAdapter {
                         }
                         String time = selectedHour + ":" + selectedMinute;
                         try {
-                            SimpleDateFormat sdf1 = new SimpleDateFormat("HH:mm");
-                            SimpleDateFormat sdf2 = new SimpleDateFormat("hh:mm");
 
-                            Date dateObj = sdf1.parse(time);
-                            end = sdf1.format(dateObj);
+                          //  SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm");
+
+
+                            end = time;
                             endTime = sdf1.parse(end);
-                            if(startTime == null){
+                            if (startTime == null) {
                                 startTime = sdf1.parse(timermodel.getStartTime());
                             }
-                            if(endTime == null)
-                            {
+                            if (endTime == null) {
                                 endTime = sdf1.parse(timermodel.getEndTime());
                             }
-                            if(endTime.before(startTime))
-                            {
-                                Toast.makeText(context,"msg wrong",Toast.LENGTH_SHORT).show();
+                            if (endTime.before(startTime)) {
+                                Toast.makeText(context, "msg wrong", Toast.LENGTH_SHORT).show();
                                 endTime = null;
                                 startTime = null;
 
-                            }
-                            else
-                            {
-                                Toast.makeText(context,"msg right",Toast.LENGTH_SHORT).show();
-                                temporaryList.get(position).setEndTime(sdf2.format(endTime) + " " + AM_PM);
+                            } else {
+                                Toast.makeText(context, "msg right", Toast.LENGTH_SHORT).show();
+                                temporaryList.get(position).setEndTime(sdf1.format(endTime));
                                 notifyDataSetChanged();
                             }
 

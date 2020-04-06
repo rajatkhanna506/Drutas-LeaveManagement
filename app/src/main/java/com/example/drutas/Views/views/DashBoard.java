@@ -45,7 +45,9 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.material.navigation.NavigationView;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -55,10 +57,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.prefs.Preferences;
 
 import static com.example.drutas.Views.util.utility.MyPREFERENCES;
 
-public class DashBoard extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, AdapterView.OnItemSelectedListener {
+public class DashBoard extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, AdapterView.OnItemSelectedListener, SavedLeaveAdapter.EditListener {
 
     private GoogleApiClient googleApiClient;
     private GoogleSignInOptions googleSignInOptions;
@@ -75,6 +78,7 @@ public class DashBoard extends AppCompatActivity implements GoogleApiClient.OnCo
     String End = "";
     int mYear, mMonth, mDay;
     ArrayList<TemporaryModel> temporaryList;
+    ArrayList<TemporaryModel> editTemporaryList;
     ImageView addleave;
     EditText etReason;
     SharedPreferences sharedPreferences;
@@ -99,7 +103,10 @@ public class DashBoard extends AppCompatActivity implements GoogleApiClient.OnCo
     Map<String, List<NotifyModelData>> map;
     ArrayList<SaveModel> savedList;
     ArrayList<String> myleaveList;
-
+    TemporaryLeaveAdapter editAdapter;
+    String leave = "leave";
+    int count = 0;
+    int pos;
 
 
     @Override
@@ -128,7 +135,6 @@ public class DashBoard extends AppCompatActivity implements GoogleApiClient.OnCo
         myleaveList = new ArrayList<>();
 
 
-        map = new HashMap<String, List<NotifyModelData>>();
         ArrayAdapter adapter = ArrayAdapter.createFromResource(this, R.array.list, R.layout.color_spinner_layout);
         adapter.setDropDownViewResource(R.layout.spinner_dropdown_layout);
         spinner.setAdapter(adapter);
@@ -232,7 +238,7 @@ public class DashBoard extends AppCompatActivity implements GoogleApiClient.OnCo
         addleave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                gson = new Gson();
+
                 if (Start.isEmpty() || End.isEmpty()) {
                     Log.d("TAG", "Please select the dates");
                     Toast.makeText(DashBoard.this, "Please select the dates", Toast.LENGTH_LONG).show();
@@ -247,51 +253,129 @@ public class DashBoard extends AppCompatActivity implements GoogleApiClient.OnCo
 
             }
         });
+
+
     }
 
+
     public void saveLeave() {
+        gson = new Gson();
         if (notifyModelArrayList == null) {
             notifyModelArrayList = new ArrayList<>();
         }
+      //  if (temporaryList != null) {
+//            int savedListSize = notifyModelArrayList.size();
+//            for (int i = 0; i < savedListSize; i++) {
+//                ArrayList<SaveModel> savedLeavesList = notifyModelArrayList.get(i).getSaveModel();
+//                for (int j = 0; j < savedLeavesList.size(); j++) {
+//                    String savedLeaves = savedLeavesList.get(j).getLeaveDate();
+//                    if ((savedLeaves.equalsIgnoreCase(Start)) || (savedLeaves.equalsIgnoreCase(End))) {
+//                        Toast.makeText(getApplicationContext(), "Alreay Leave applied for these Date", Toast.LENGTH_SHORT).show();
+//                        return;
+//                    }
+//                }
+//            }
+//            savedList = new ArrayList<>();
+//            notifyModelData = new NotifyModelData();
+//            Toast.makeText(DashBoard.this, "display list", Toast.LENGTH_LONG).show();
+//            notifyModelData.setLeaveType(LeaveType);
+//            notifyModelData.setNotifyDate(Start + " To " + End);
+//            notifyModelData.setReason(etReason.getText().toString());
+//            notifyModelData.setStartDate(Start);
+//            notifyModelData.setEndDate(End);
+//            for (int i = 0; i < editTemporaryList.size(); i++) {
+//                SaveModel saveModel = new SaveModel();
+//                TemporaryModel temporaryModel = editTemporaryList.get(i);
+//                Log.d("TAG", "msg" + temporaryModel.getLeaveDate());
+//                saveModel.setLeaveDate(temporaryModel.getLeaveDate());
+//                saveModel.setStartTime(temporaryModel.getStartTime());
+//                saveModel.setEndTime(temporaryModel.getEndTime());
+//                savedList.add(saveModel);
+//            }
+//            notifyModelData.setSaveModel(savedList);
+//            SharedPreferences.Editor editor = sharedPreferences.edit();
+//            String json = gson.toJson(savedList);
+//            editor.putString(leave + "" + pos, json);
+//            editor.commit();
+//            notifyModelArrayList.add(notifyModelData);
+//            if (savedLeaveAdapter == null) {
+//                savedLeaveAdapter = new SavedLeaveAdapter(DashBoard.this, notifyModelArrayList);
+//                lvSavedNonScrollList.setAdapter(savedLeaveAdapter);
+//            } else {
+//                savedLeaveAdapter.notifyDataSetChanged();
+//            }
+//            editTemporaryList.clear();
+//            editAdapter.notifyDataSetChanged();
+//            editTemporaryList = null;
+//            tvStartDate.setText("");
+//            tvEndDate.setText("");
+//            etReason.setText("");
+//            Start = "";
+//            End = "";
+            //temporaryLeaveAdapter = null;
+            //savedLeaveAdapter = null;
+
+   //     } else {
+            int savedListSize = notifyModelArrayList.size();
+            for (int i = 0; i < savedListSize; i++) {
+                ArrayList<SaveModel> savedLeavesList = notifyModelArrayList.get(i).getSaveModel();
+                for (int j = 0; j < savedLeavesList.size(); j++) {
+                    String savedLeaves = savedLeavesList.get(j).getLeaveDate();
+                    if ((savedLeaves.equalsIgnoreCase(Start)) || (savedLeaves.equalsIgnoreCase(End))) {
+                        Toast.makeText(getApplicationContext(), "Alreay Leave applied for these Date", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                }
 
 
-        savedList = new ArrayList<>();
-        notifyModelData = new NotifyModelData();
-        Toast.makeText(DashBoard.this, "display list", Toast.LENGTH_LONG).show();
-        notifyModelData.setLeaveType(LeaveType);
-        notifyModelData.setNotifyDate(Start + " To " + End);
-        notifyModelData.setReason(etReason.getText().toString());
-        notifyModelData.setStartDate(Start);
-        notifyModelData.setEndDate(End);
-        for (int i = 0; i < temporaryList.size(); i++) {
-            SaveModel saveModel = new SaveModel();
-            TemporaryModel temporaryModel = temporaryList.get(i);
-            Log.d("TAG", "msg" + temporaryModel.getLeaveDate());
-            saveModel.setLeaveDate(temporaryModel.getLeaveDate());
-            saveModel.setStartTime(temporaryModel.getStartTime());
-            saveModel.setEndTime(temporaryModel.getEndTime());
-            savedList.add(saveModel);
+            }
+
+            savedList = new ArrayList<>();
+            notifyModelData = new NotifyModelData();
+            Toast.makeText(DashBoard.this, "display list", Toast.LENGTH_LONG).show();
+            notifyModelData.setLeaveType(LeaveType);
+            notifyModelData.setNotifyDate(Start + " To " + End);
+            notifyModelData.setReason(etReason.getText().toString());
+            notifyModelData.setStartDate(Start);
+            notifyModelData.setEndDate(End);
+            for (int i = 0; i < temporaryList.size(); i++) {
+                SaveModel saveModel = new SaveModel();
+                TemporaryModel temporaryModel = temporaryList.get(i);
+                Log.d("TAG", "msg" + temporaryModel.getLeaveDate());
+                saveModel.setLeaveDate(temporaryModel.getLeaveDate());
+                saveModel.setStartTime(temporaryModel.getStartTime());
+                saveModel.setEndTime(temporaryModel.getEndTime());
+                savedList.add(saveModel);
+            }
+            notifyModelData.setSaveModel(savedList);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            String json = gson.toJson(savedList);
+            editor.putString(leave + "" + count, json);
+            editor.commit();
+            notifyModelArrayList.add(notifyModelData);
+
+
+            if (savedLeaveAdapter == null) {
+                savedLeaveAdapter = new SavedLeaveAdapter(DashBoard.this, notifyModelArrayList);
+                lvSavedNonScrollList.setAdapter(savedLeaveAdapter);
+            } else {
+                savedLeaveAdapter.notifyDataSetChanged();
+            }
+
+
+            temporaryList.clear();
+            temporaryLeaveAdapter.notifyDataSetChanged();
+            tvStartDate.setText("");
+            tvEndDate.setText("");
+            etReason.setText("");
+            Start = "";
+            End = "";
+            count++;
+
         }
-        notifyModelData.setSaveModel(savedList);
-        notifyModelArrayList.add(notifyModelData);
-
-        if (savedLeaveAdapter == null) {
-            savedLeaveAdapter = new SavedLeaveAdapter(getApplicationContext(), notifyModelArrayList);
-            lvSavedNonScrollList.setAdapter(savedLeaveAdapter);
-        } else {
-            savedLeaveAdapter.notifyDataSetChanged();
-        }
-
-        temporaryList.clear();
-        temporaryLeaveAdapter.notifyDataSetChanged();
-        tvStartDate.setText("");
-        tvEndDate.setText("");
-        etReason.setText("");
-        Start = "";
-        End = "";
 
 
-    }
+    //}
 
 
     public String openStartCalendar(View v) {
@@ -383,9 +467,9 @@ public class DashBoard extends AppCompatActivity implements GoogleApiClient.OnCo
         if (!temporaryList.isEmpty()) {
             temporaryList.clear();
         }
-        if (savedList == null) {
-            savedList = new ArrayList<>();
-        }
+//        if (savedList == null) {
+//            savedList = new ArrayList<>();
+//        }
         DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         try {
             startDate = (Date) formatter.parse(Start);
@@ -411,8 +495,8 @@ public class DashBoard extends AppCompatActivity implements GoogleApiClient.OnCo
                 temporaryModel = new TemporaryModel();
                 Date sdate = new Date(curTime);
                 temporaryModel.setLeaveDate(formatter.format(sdate));
-                temporaryModel.setStartTime("10:00 AM");
-                temporaryModel.setEndTime("06:00 PM");
+                temporaryModel.setStartTime("10:00");
+                temporaryModel.setEndTime("18:00");
                 temporaryList.add(temporaryModel);
 
 
@@ -457,5 +541,61 @@ public class DashBoard extends AppCompatActivity implements GoogleApiClient.OnCo
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
+    }
+
+    @Override
+    public void Event(int position, Context context, String reason, String leaveType) {
+//        gson = new Gson();
+//        this.pos = position;
+//        sharedPreferences = getSharedPreferences(MyPREFERENCES, context.MODE_PRIVATE);
+//        String list = sharedPreferences.getString(leave + "" + position, "");
+//        Log.d("TAG", "savedlist" + list);
+//        Type type = new TypeToken<ArrayList<TemporaryModel>>() {
+//        }.getType();
+//        editTemporaryList = new ArrayList<>();
+//        editTemporaryList = gson.fromJson(list, type);
+//        Start = editTemporaryList.get(0).getLeaveDate();
+//        tvStartDate.setText(Start);
+//        End = editTemporaryList.get(editTemporaryList.size() - 1).getLeaveDate();
+//        tvEndDate.setText(End);
+//        etReason.setText(reason);
+//        editAdapter = new TemporaryLeaveAdapter(context, editTemporaryList);
+//        lvTemporaryNonScrollList = findViewById(R.id.lvTemporaryLeaveList);
+//        lvTemporaryNonScrollList.setAdapter(editAdapter);
+//        sharedPreferences.edit().remove("leave" + position).commit();
+//        count = pos + 1;
+//        temporaryLeaveAdapter = null;
+        etReason.setText(notifyModelArrayList.get(position).getReason());
+        Start = notifyModelArrayList.get(position).getStartDate();
+        End = notifyModelArrayList.get(position).getEndDate();
+        tvStartDate.setText(Start);
+        tvEndDate.setText(End);
+        savedList = notifyModelArrayList.get(position).getSaveModel();
+        temporaryList = new ArrayList<>();
+        for (int i = 0; i < savedList.size(); i++) {
+            TemporaryModel temporaryModel = new TemporaryModel();
+            SaveModel saveModel = savedList.get(i);
+            //Log.d("TAG", "msg" + saveModel.getLeaveDate());
+            temporaryModel.setLeaveDate(saveModel.getLeaveDate());
+            temporaryModel.setStartTime(saveModel.getStartTime());
+            temporaryModel.setEndTime(saveModel.getEndTime());
+            temporaryList.add(temporaryModel);
+        }
+        lvTemporaryNonScrollList = findViewById(R.id.lvTemporaryLeaveList);
+        temporaryLeaveAdapter = new TemporaryLeaveAdapter(context, temporaryList);
+        lvTemporaryNonScrollList = findViewById(R.id.lvTemporaryLeaveList);
+        lvTemporaryNonScrollList.setAdapter(temporaryLeaveAdapter);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        SharedPreferences settings = DashBoard.this.getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+        String flag = settings.getString(LoginStatus, "");
+        settings.edit().clear().commit();
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(LoginStatus, flag);
+        editor.commit();
     }
 }
