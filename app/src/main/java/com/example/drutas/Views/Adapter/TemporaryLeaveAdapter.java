@@ -91,17 +91,8 @@ public class TemporaryLeaveAdapter extends BaseAdapter {
                 mTimePicker = new TimePickerDialog(context, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                        String AM_PM;
-                        if (selectedHour < 12) {
-                            AM_PM = "AM";
-                        } else {
-                            AM_PM = "PM";
-                        }
                         String time = selectedHour + ":" + selectedMinute;
                         try {
-
-                           // SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm");
-
                             strt = time;
                             startTime = sdf1.parse(strt);
                             if (startTime == null) {
@@ -144,12 +135,12 @@ public class TemporaryLeaveAdapter extends BaseAdapter {
                 mTimePicker = new TimePickerDialog(context, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                        String AM_PM;
-                        if (selectedHour < 12) {
-                            AM_PM = "AM";
-                        } else {
-                            AM_PM = "PM";
-                        }
+//                        String AM_PM;
+//                        if (selectedHour < 12) {
+//                            AM_PM = "AM";
+//                        } else {
+//                            AM_PM = "PM";
+//                        }
                         String time = selectedHour + ":" + selectedMinute;
                         try {
 

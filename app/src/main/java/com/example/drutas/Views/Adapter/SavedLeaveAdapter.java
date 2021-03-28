@@ -86,7 +86,6 @@ public class SavedLeaveAdapter extends BaseAdapter {
                 notifyModelDataArrayList.remove(position);
                 sharedPreferences = context.getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
                 sharedPreferences.edit().remove("leave"+position).commit();
-
                 notifyDataSetChanged();
             }
         });
@@ -104,11 +103,6 @@ public class SavedLeaveAdapter extends BaseAdapter {
 //                SharedPreferences.Editor editor = sharedPreferences.edit();
 //                editor.remove("leave"+position);
 //                editor.commit();
-
-
-
-
-
             }
         });
 
